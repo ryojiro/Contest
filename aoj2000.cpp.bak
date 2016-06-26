@@ -1,0 +1,85 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <deque>
+#include <list>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <cmath>
+#include <cstring>
+#include <cctype>
+#include <sstream>
+#include <set>
+#include <map>
+#include <queue>
+#include <complex>
+using namespace std;
+
+int main() {
+	int N, M, x, y;
+	pair<int, int> robot;
+	int field[21][21];
+
+	while(cin >> N, N) {
+		for(int i=0; i<21; i++)
+			for(int j=0; j<21; j++)
+				field[i][j] = 0;
+		robot.first = robot.second = 10;
+		for(int i=0; i<N; i++) {
+			cin >> x >> y;
+			field[x][y] = 1;
+		}
+		for(int i=0; i<21; i++) {
+			for(int j=0; j<21; j++)
+				cout << field[j][i] << ' ';
+			cout << endl;
+		}
+		cin >> M;
+		for(int j=0; j<M; j++) {
+			char drct;
+			int dis;
+			cin >> drct >> dis;
+			if(drct == 'N') {
+				for(int i=robot.second+1; i<=robot.second+dis; i++) {
+					field[robot.first][i] = 0;
+				}
+				robot.second += dis;
+			}
+			else if(drct == 'E') {
+				for(int i=robot.first+1; i<=robot.first+dis; i++) {
+					field[i][robot.second] = 0;
+				}
+				robot.first += dis;
+			}
+			else if(drct == 'S') {
+				for(int i=robot.second-dis+1; i<=robot.second; i++) {
+					field[robot.first][i] = 0;
+				}
+				robot.second -= dis;
+			}
+			else if(drct == 'W') {
+				for(int i=robot.first-dis+1; i<=robot.first; i++) {
+					field[i][robot.second] = 0;
+				}
+				robot.first -= dis;
+			}
+		}
+		for(int i=0; i<21; i++) {
+			for(int j=0; j<21; j++)
+				cout << field[j][i] << ' ';
+			cout << endl;
+		}
+		int check = 0;
+		for(int i=0; i<21; i++)
+			for(int j=0; j<21; j++)
+				check += field[i][j];
+
+		if(check) cout << "No" << endl;
+		else cout << "Yes" << endl;
+	}
+
+	return 0;
+}

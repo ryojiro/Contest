@@ -1,121 +1,93 @@
-#include<iostream>
-#include<iomanip>
-#include<string>
-#include<cstdlib>
-#include<cmath>
-#include<algorithm>
-#include<vector>
-#include<iomanip>
-
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <deque>
+#include <list>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <cmath>
+#include <cstring>
+#include <cctype>
+#include <sstream>
+#include <set>
+#include <map>
+#include <queue>
+#include <complex>
 using namespace std;
+#define REP(i,n) for(int i = 0; i < (int)n; i++)
+#define FOR(i,a,b) for(int i = a; i < (int)b; i++)
+const int INF = 1<<28;
 
+int W, H, ppl;
+char m[30][30];
+string d = "WSEN";
+int dx[] = {-1, 0, 1, 0}, dy[] = {0, 1, 0, -1};
+
+bool canMove(int h, int w) {
+	if(0 <= h && 0 <= w && h < H && w < W)
+		if(m[h][w] == '.' || m[h][w] == 'X')
+			return true;
+	return false;
+}
+
+char decideDirection(int h, int w, char d2) {
+	REP(i, 4) {
+		int nd = (d.find(d2) + 3 + i) % 4;
+		int nh = h + dy[nd], nw = w + dx[nd];
+		if(canMove(nh, nw)) return d[nd];
+	}
+	return d2;
+}
 
 int main() {
-	int W, H;
-	cin >> W >> H;
-	int field[H][W];
-
-	char input;
-	for(int i=0; i<H; i++) {
-		for(int j=0; j<W; j++) {
-			cin >> input;
-			if(input == '#') field[i][j] = 10;
-			else if(input == '.') field[i][j] = 100;
-			else if(input == 'X') field[i][j] = 1000;
-			else if(input == 'E') field[i][j] = 0;
-			else if(input == 'N') field[i][j] = 1;
-			else if(input == 'W') field[i][j] = 2;
-			else if(input == 'S') field[i][j] = 3;
+	while(cin >> W >> H, W|H) {
+		ppl = 0;
+		REP(i, H) REP(j, W) {
+			cin >> m[i][j];
+			if(d.find(m[i][j]) != string::npos)
+				ppl++;
 		}
+
+		int cnt = 0;
+		while(ppl) {
+			REP(i, H) REP(j, W) {
+				if(d.find(m[i][j]) != string::npos) {
+					m[i][j] = decideDirection(i, j ,m[i][j]);
+				}
+			}
+
+			bool chk[30][30];
+			memset(chk, true, sizeof(chk));
+			REP(i, 4) REP(j, H) REP(k, W) {
+				if(m[j][k] == d[i] && chk[j][k]) {
+					int nh = j + dy[i], nw = k + dx[i];
+					if(m[nh][nw] == '.' && chk[nh][nw]) {
+						swap(m[j][k], m[nh][nw]);
+						chk[nh][nw] = false;
+					}
+					else if(m[nh][nw] == 'X' && chk[nh][nw]) {
+						m[j][k] = '.';
+						chk[nh][nw] = false;
+						ppl--;
+					}
+					chk[j][k] = false;
+				}
+			}
+			cnt++;
+			if(cnt > 180) break;
+
+			//debug
+//			REP(i, H) {
+//				REP(j, W)
+//					cout << m[i][j];
+//				cout << endl;
+//			}
+		}
+		if(cnt > 180) cout << "NA" << endl;
+		else cout << cnt << endl;
 	}
-
-	queue<int> q;
-	for(int i=0; i<H; i++) {
-		for(int j=0; j<W; j++) {
-			if(field[i][j] < 4) {
-				q.push(H);
-				q.push(W);
-				q.push(field[i][j]);
-			}
-		}
-	}
-
-	int h, w, d;
-	while(q.size() > 0) {
-		//dicide direction
-		int times = q.size()/3
-		for(int j=0; j<times; j++) {
-			h = q.pop();
-			w = q.pop();
-			d = q.pop();
-			for(int i=0; i<4; i++) {
-				if((d+i+3)%4 == 0) {
-					if(w<W-1 && field[h][w+1] > 99) {
-						q.push(h);
-						q.push(w);
-						q.push(0);
-						break;
-					}
-				}
-				else if((d+i+3)%4 == 1) {
-					if(h>1 && field[h-1][w] > 99) {
-						q.push(h);
-						q.push(w);
-						q.push(1);
-						break;
-					}
-				}
-				else if((d+i+3)%4 == 2) {
-					if(w>1 && field[h][w-1] > 99) {
-						q.push(h);
-						q.push(w);
-						q.push(2);
-						break;
-					}
-				}
-				else if((d+i+3)%4 == 3) {
-					if(h<H-1 && field[h+1][w] > 99) {
-						q.push(h);
-						q.push(w);
-						q.push(3);
-						break;
-					}
-				}
-			}
-		}
-
-		//dicide move
-		for(int j=0; j<times; j++) {
-			h = q.pop();
-			w = q.pop();
-			d = q.pop();
-			if((d+i+3)%4 == 0) {
-				if(w<W-1 && field[h][w+1] > 99) {
-					d = 0;
-					break;
-				}
-			}
-			else if((d+i+3)%4 == 1) {
-				if(h>1 && field[h-1][w] > 99) {
-					d = 1;
-					break;
-				}
-			}
-			else if((d+i+3)%4 == 2) {
-				if(w>1 && field[h][w-1] > 99) {
-					d = 2;
-					break;
-				}
-			}
-			else if((d+i+3)%4 == 3) {
-				if(h<H-1 && field[h+1][w] > 99) {
-					d = 3;
-					break;
-				}
-			}
-		}
-
-
 	return 0;
 }
-//MURI

@@ -1,0 +1,115 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <deque>
+#include <list>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <cmath>
+#include <cstring>
+#include <cctype>
+#include <sstream>
+#include <set>
+#include <map>
+#include <queue>
+#include <complex>
+using namespace std;
+#define REP(i,n) for(int i = 0; i < (int)n; i++)
+#define FOR(i,a,b) for(int i = a; i < (int)b; i++)
+const int INF = 1<<28;
+
+int dx[] = {-1, 0, 1, 0};
+int dy[] = {0, 1, 0, -1};
+
+struct P {
+	int h, w, d;
+	P(int a, int b, int c) {h = a; w = b; d = c;}
+	bool operator > (const P& a) const {
+		return d > a.d; 
+	}
+};
+
+int main() {
+	int W, H;
+	while(cin >> W >> H, W|H) {
+		int field[H][W];
+		REP(i, H) REP(j, W) {
+			char in; cin >> in;
+			if(in == '#') field[i][j] = 10;
+			else if(in == '.') field[i][j] = 100;
+			else if(in == 'X') field[i][j] = 1000;
+			else if(in == 'E') field[i][j] = 2;
+			else if(in == 'N') field[i][j] = 3;
+			else if(in == 'W') field[i][j] = 0;
+			else if(in == 'S') field[i][j] = 1;
+		}
+
+		queue<P> q;
+		priority_queue<P, vector<P>, greater<P> > pq;
+		REP(i, H) REP(j, W)
+			if(field[i][j] < 4)
+				q.push(P(i, j, field[i][j]));
+
+		int cnt = 0;
+		while(q.size() | pq.size()) {
+
+			//dicide direction
+			while(q.size()) {
+				P pp = q.front(); q.pop();
+				bool flg = true;
+				REP(i, 4) {
+					int nd = (pp.d + 3 + i) % 4;
+					int nh = pp.h + dy[nd], nw = pp.w + dx[nd];
+					if(0 <= nh && 0 <= nw && nh < H && nw < W  && field[nh][nw] > 99) {
+						pp.d = nd; pq.push(pp);
+						field[pp.h][pp.w] = nd;
+						flg = false;
+						break;
+					}
+				}
+				if(flg) pq.push(pp);
+			}
+
+			//dicide move
+			while(pq.size()) {
+				P pp = pq.top(); pq.pop();
+				int nh = pp.h + dy[pp.d], nw = pp.w + dx[pp.d];
+				if(field[nh][nw] > 99) {
+					if(field[nh][nw] == 1000)
+						field[pp.h][pp.w] = 100;
+					else {
+						swap(field[pp.h][pp.w], field[nh][nw]);
+						q.push(P(nh, nw, pp.d));
+					}
+				}
+				else
+					q.push(pp);
+			}
+			cnt++;
+			if(cnt > 180) break;
+
+			//debug
+			REP(i, H) {
+				REP(j, W) {
+				if(field[i][j] == 10) cout << '#';
+				else if(field[i][j] == 100) cout << '.';
+				else if(field[i][j] == 1000) cout << 'X';
+				else if(field[i][j] == 0) cout << 'W';
+				else if(field[i][j] == 1) cout << 'S';
+				else if(field[i][j] == 2) cout << 'E';
+				else if(field[i][j] == 3) cout << 'N';
+				}
+				cout << endl;
+			}
+			cout << cnt << " cnt" << endl;
+
+		}
+		if(cnt > 180) cout << "NA" << endl;
+		else cout << cnt << endl;
+	}
+	return 0;
+}
+//WA

@@ -14,29 +14,38 @@
 #include <sstream>
 #include <set>
 #include <map>
+#include <stack>
 #include <queue>
 #include <complex>
 using namespace std;
 #define REP(i,n) for(int i = 0; i < (int)n; i++)
 #define FOR(i,a,b) for(int i = a; i < (int)b; i++)
+#define pb push_back
+#define mp make_pair
+typedef vector<int> vi;
+typedef pair<int, int> pi;
+typedef long long ll;
 const int INF = 1<<28;
 
 int main() {
-	string a = "AHIMOoTUVvWwXxY";
-	string in; cin >> in;
-	bool flg = true;
-	REP(i, in.size()) {
-		if(in[i] == 'b' && in[in.size() - i-1] == 'd') {}
-		else if(in[i] == 'd' && in[in.size() - i-1] == 'b') {}
-		else if(in[i] == 'p' && in[in.size() - i-1] == 'q') {}
-		else if(in[i] == 'q' && in[in.size() - i-1] == 'p') {}
-		else if(a.find(in[i]) != -1 && in[in.size() - i-1] == in[i]) {}
-		else
-			flg = false;
+	set<int> row, col;
+	int rtime = 0, ctime = 0;
+	int n, m; cin >> n >> m;
+	ll sum = (ll)n*n;
+	REP(i, m) {
+		int in1, in2; cin >> in1 >> in2;
+		if(!row.count(in1)) {
+			sum -= n - ctime;
+			rtime++;
+			row.insert(in1);
+		}
+		if(!col.count(in2)) {
+			sum -= n - rtime;
+			ctime++;
+			col.insert(in2);
+		}
+		cout << sum << ' ';
 	}
-	if(flg)
-		cout << "TAK" << endl;
-	else
-		cout << "NIE" << endl;
+	cout << endl;
 	return 0;
 }

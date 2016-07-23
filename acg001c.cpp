@@ -21,22 +21,15 @@ using namespace std;
 #define FOR(i,a,b) for(int i = a; i < (int)b; i++)
 const int INF = 1<<28;
 
+struct node {
+	int a, b;
+};
+
 int main() {
-	string a = "AHIMOoTUVvWwXxY";
-	string in; cin >> in;
-	bool flg = true;
-	REP(i, in.size()) {
-		if(in[i] == 'b' && in[in.size() - i-1] == 'd') {}
-		else if(in[i] == 'd' && in[in.size() - i-1] == 'b') {}
-		else if(in[i] == 'p' && in[in.size() - i-1] == 'q') {}
-		else if(in[i] == 'q' && in[in.size() - i-1] == 'p') {}
-		else if(a.find(in[i]) != -1 && in[in.size() - i-1] == in[i]) {}
-		else
-			flg = false;
-	}
-	if(flg)
-		cout << "TAK" << endl;
-	else
-		cout << "NIE" << endl;
+	int N, k; cin >> N >> k;
+	node n[N];
+	fill(n, n+N, 0);
+
+
 	return 0;
 }

@@ -22,17 +22,14 @@ using namespace std;
 const int INF = 1<<28;
 
 int main() {
-	int n, k;
-	cin >> n >> k;
-	int a[1000000] = {};
-	bool flg = false;
-	REP(i, n) {
-		int in; cin >> in;
-		a[7 % in]++;
-		if(a[7 % in] > 1) flg = true;
-	}
-	if(flg) cout << "No" << endl;
-	else cout << "Yes" << endl;
-
+	int N; cin >> N;
+	vector<int> v(N*2);
+	REP(i, N*2)
+		cin >> v[i];
+	sort(v.begin(), v.end());
+	int sum = 0;
+	for(int i=0; i<N*2; i += 2)
+		sum += v[i] > v[i+1] ? v[i+1] : v[i];
+	cout << sum << endl;
 	return 0;
 }

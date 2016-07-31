@@ -1,8 +1,3 @@
-/*
-	 ここにコメントを書いていく
-	 かなり見やすい気がするけどどうだろう？
-*/
-
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -34,6 +29,42 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	cout << "HelloWorld!" << endl;
+	int N;
+	ll L;
+	cin >> N >> L;
+	ll sum = 0LL;
+	int a[N];
+	bool flg = false;
+	REP(i, N) {
+		cin >> a[i];
+		sum += a[i];
+	}
+	vi v;
+	int f = 0, l = N-1;
+	while(true) {
+		if(a[f] < a[l]) {
+			v.pb(f+1);
+			sum -= (ll)a[f];
+			f++;
+		}
+		else if(a[f] > a[l]) {
+			v.pb(l);
+			sum -= (ll)a[l];
+			l--;
+		}
+		if(f == l)
+			break;
+		if(sum < L) {
+			flg = true;
+			break;
+		}
+	}
+	if(flg)
+		cout << "Impossible" << endl;
+	else {
+		cout << "Possible" << endl;
+		REP(i, v.size())
+			cout << v[i] << endl;
+	}
 	return 0;
 }

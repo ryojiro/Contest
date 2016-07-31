@@ -1,8 +1,3 @@
-/*
-	 ここにコメントを書いていく
-	 かなり見やすい気がするけどどうだろう？
-*/
-
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -34,6 +29,18 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	cout << "HelloWorld!" << endl;
+	int n; cin >> n;
+	int pre = 0, ans = 0, cnt = 0;
+	REP(i, n) {
+		int in; cin >> in;
+		if(pre < in) {
+			cnt++;
+			ans = max(ans, cnt);
+		}
+		else
+			cnt = 1;
+		pre = in;
+	}
+	cout << ans << endl;
 	return 0;
 }

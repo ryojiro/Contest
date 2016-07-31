@@ -1,8 +1,3 @@
-/*
-	 ここにコメントを書いていく
-	 かなり見やすい気がするけどどうだろう？
-*/
-
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -31,9 +26,29 @@ typedef vector<int> vi;
 typedef pair<int, int> pi;
 typedef long long ll;
 const int INF = 1<<28;
-const ll MOD = 1000000007;
 
 int main() {
-	cout << "HelloWorld!" << endl;
+	int n, k; cin >> n >> k;
+	bool b[10];
+	memset(b, 0, sizeof(b));
+	REP(i, k) {
+		int in; cin >> in;
+		b[in] = true;
+	}
+	while(true) {
+		int chk = n;
+		bool flg = false;
+		while(chk > 0) {
+			if(b[chk % 10]) {
+				n++;
+				flg = true;
+				break;
+			}
+			chk /= 10;
+		}
+		if(!flg) break;
+	}
+	cout << n << endl;
+
 	return 0;
 }

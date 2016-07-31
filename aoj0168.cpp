@@ -1,8 +1,3 @@
-/*
-	 ここにコメントを書いていく
-	 かなり見やすい気がするけどどうだろう？
-*/
-
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -34,6 +29,15 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	cout << "HelloWorld!" << endl;
+	ll dp[35] = {};
+	dp[0] = 1;
+	REP(i, 30) {
+		dp[i+1] += dp[i];
+		dp[i+2] += dp[i];
+		dp[i+3] += dp[i];
+	}
+	int n;
+	while(cin >> n, n)
+		cout << dp[n] / 3650 + 1 << endl;
 	return 0;
 }

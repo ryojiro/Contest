@@ -1,8 +1,3 @@
-/*
-	 ここにコメントを書いていく
-	 かなり見やすい気がするけどどうだろう？
-*/
-
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -31,9 +26,17 @@ typedef vector<int> vi;
 typedef pair<int, int> pi;
 typedef long long ll;
 const int INF = 1<<28;
-const ll MOD = 1000000007;
 
 int main() {
-	cout << "HelloWorld!" << endl;
+	int n5 = 0, n7 = 0;
+	REP(i, 3) {
+		int in; cin >> in;
+		if(in == 5) n5++;
+		if(in == 7) n7++;
+	}
+	if(n5 == 2 && n7 == 1)
+		cout << "YES" << endl;
+	else
+		cout << "NO" << endl;
 	return 0;
 }

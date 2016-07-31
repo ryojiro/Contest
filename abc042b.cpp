@@ -1,8 +1,3 @@
-/*
-	 ここにコメントを書いていく
-	 かなり見やすい気がするけどどうだろう？
-*/
-
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -33,7 +28,15 @@ typedef long long ll;
 const int INF = 1<<28;
 const ll MOD = 1000000007;
 
+
 int main() {
-	cout << "HelloWorld!" << endl;
+	int n, l; cin >> n >> l;
+	vector<string> s(n);
+	REP(i, n)
+		cin >> s[i];
+	sort(s.begin(), s.end());
+	REP(i, n)
+		cout <<  s[i];
+	cout << endl;
 	return 0;
 }

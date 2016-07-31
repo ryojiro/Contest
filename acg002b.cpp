@@ -1,8 +1,3 @@
-/*
-	 ここにコメントを書いていく
-	 かなり見やすい気がするけどどうだろう？
-*/
-
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -34,6 +29,23 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	cout << "HelloWorld!" << endl;
+	int N, M; cin >> N >> M;
+	int box[100001];
+	fill(box, box+100001, 1);
+	bool red[100001] = {};
+	red[1] = true;
+	REP(i, M) {
+		int x, y; cin >> x >> y;
+		box[x]--; box[y]++;
+		if(red[x])
+			red[y] = true;
+		if(!box[x])
+			red[x] = false;
+	}
+	int cnt = 0;
+	FOR(i, 1, N+1)
+		if(red[i])
+			cnt++;
+	cout << cnt << endl;
 	return 0;
 }

@@ -29,13 +29,16 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	ll dp[35] = {};
-	dp[0] = 1;
-	REP(i, 30)
-		FOR(j, 1, 4)
-			dp[i+j] += dp[i];
-	int n;
-	while(cin >> n, n)
-		cout << dp[n] / 3650 + 1 << endl;
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int dp[501] = {};
+	int n, m; cin >> n >> m;
+	REP(i, n) {
+		int v, t; cin >> v >> t;
+		for(int j = 500; j >= t; j--)
+			dp[j] = max(dp[j], dp[j-t] + v);
+	}
+	cout << dp[m] << endl;
 	return 0;
 }

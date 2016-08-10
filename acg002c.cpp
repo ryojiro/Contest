@@ -29,42 +29,23 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	int N;
-	ll L;
-	cin >> N >> L;
-	ll sum = 0LL;
+	int N, L; cin >> N >> L;
 	int a[N];
+	int ans = -1;
 	bool flg = false;
 	REP(i, N) {
 		cin >> a[i];
-		sum += a[i];
+		if(i && a[i] + a[i-1] >= L)
+			ans = i;
 	}
-	vi v;
-	int f = 0, l = N-1;
-	while(true) {
-		if(a[f] < a[l]) {
-			v.pb(f+1);
-			sum -= (ll)a[f];
-			f++;
-		}
-		else if(a[f] > a[l]) {
-			v.pb(l);
-			sum -= (ll)a[l];
-			l--;
-		}
-		if(f == l)
-			break;
-		if(sum < L) {
-			flg = true;
-			break;
-		}
-	}
-	if(flg)
+	if(ans == -1)
 		cout << "Impossible" << endl;
 	else {
 		cout << "Possible" << endl;
-		REP(i, v.size())
-			cout << v[i] << endl;
+		FOR(i, 1, ans)
+			cout << i << endl;
+		for(int i=N-1; i >= ans; i--)
+			cout << i << endl;
 	}
 	return 0;
 }

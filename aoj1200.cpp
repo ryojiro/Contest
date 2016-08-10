@@ -29,13 +29,29 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	ll dp[35] = {};
-	dp[0] = 1;
-	REP(i, 30)
-		FOR(j, 1, 4)
-			dp[i+j] += dp[i];
+	vector<bool> prime(1<<15, true);
+	prime[0] = prime[1] = false;
+	FOR(i, 2, 1<<15) {
+		if(prime[i]) {
+			for(int j=i*2; j < 1<<15; j += i)
+				prime[j] = false;
+		}
+	}
 	int n;
-	while(cin >> n, n)
-		cout << dp[n] / 3650 + 1 << endl;
+	while(cin >> n, n) {
+		int cnt = 0;
+		REP(i, n) {
+			if(prime[i] > n)
+				break;
+			FOR(j, i, n) {
+				if(prime[j] > n)
+					break;
+				if(prime[i] && prime[j] && i + j == n) {
+					cnt++;
+				}
+			}
+		}
+		cout << cnt << endl;
+	}
 	return 0;
 }

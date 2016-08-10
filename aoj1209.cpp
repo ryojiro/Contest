@@ -29,13 +29,14 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	ll dp[35] = {};
+	int dp[290] = {};
 	dp[0] = 1;
-	REP(i, 30)
-		FOR(j, 1, 4)
-			dp[i+j] += dp[i];
+	FOR(i, 1, 18)
+		for(int j = i*i; j < 290; j++)
+			dp[j] += dp[j-i*i];
 	int n;
 	while(cin >> n, n)
-		cout << dp[n] / 3650 + 1 << endl;
+		cout << dp[n] << endl;
+
 	return 0;
 }

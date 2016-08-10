@@ -29,13 +29,26 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	ll dp[35] = {};
-	dp[0] = 1;
-	REP(i, 30)
-		FOR(j, 1, 4)
-			dp[i+j] += dp[i];
-	int n;
-	while(cin >> n, n)
-		cout << dp[n] / 3650 + 1 << endl;
+	int n, k; cin >> n >> k;
+	ll sum = 0LL, ans = 0LL;
+	int c[100001];
+	FOR(i, 1, n+1) {
+		cin >> c[i];
+		sum += c[i];
+	}
+	bool id[100001] = {};
+	REP(i, k) {
+		int in; cin >> in;
+		id[in] = true;
+		sum -= c[in];
+		ans += c[in] * sum;
+	}
+	FOR(i, 1, n+1) {
+		if(i != n && !id[i] && !id[i+1])
+			ans += c[i] * c[i+1];
+		if(i == n && !id[i] && !id[1])
+				ans += c[i] * c[1];
+	}
+	cout << ans << endl;
 	return 0;
 }

@@ -27,15 +27,28 @@ typedef pair<int, int> pi;
 typedef long long ll;
 const int INF = 1<<28;
 const ll MOD = 1000000007;
+const int dx[] = {1, 0, -1, 0}, dy[] = {0, 1, 0, -1};
 
 int main() {
-	ll dp[35] = {};
-	dp[0] = 1;
-	REP(i, 30)
-		FOR(j, 1, 4)
-			dp[i+j] += dp[i];
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
 	int n;
-	while(cin >> n, n)
-		cout << dp[n] / 3650 + 1 << endl;
+	while(cin >> n, n) {
+		int s; cin >> s;
+		int a = 0, b = 0;
+		bool flg = false;
+		REP(i, n) {
+			int a2, b2; cin >> a2 >> b2;
+			a += a2, b += b2;
+		}
+		FOR(i, a+n, b+n+1)
+			if(1 == s % i)
+				flg = true;
+		if(flg)
+			cout << 0 << endl;
+		else
+			cout << 1 << endl;
+	}
 	return 0;
 }

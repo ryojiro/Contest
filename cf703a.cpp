@@ -29,13 +29,19 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 
 int main() {
-	ll dp[35] = {};
-	dp[0] = 1;
-	REP(i, 30)
-		FOR(j, 1, 4)
-			dp[i+j] += dp[i];
-	int n;
-	while(cin >> n, n)
-		cout << dp[n] / 3650 + 1 << endl;
+	int n, m = 0, c = 0; cin >> n;
+	REP(i, n) {
+		int in1, in2; cin >> in1 >> in2;
+		if(in1 > in2)
+			m++;
+		else if(in1 < in2)
+			c++;
+	}
+	if(m > c)
+		cout << "Mishka" << endl;
+	else if(m < c)
+		cout << "Chris" << endl;
+	else
+		cout << "Friendship is magic!^^" << endl;
 	return 0;
 }

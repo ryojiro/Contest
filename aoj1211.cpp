@@ -31,8 +31,6 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 const int dx[] = {1, 0, -1, 0}, dy[] = {0, 1, 0, -1};
 
-int sum;
-
 bool chk(int i, int j, vector<string> &s) {
 	if(i < 0 || j < 0 || s.size()-1 < i || s[i].size()-1 < j)
 		return false;

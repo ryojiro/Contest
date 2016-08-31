@@ -29,26 +29,40 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 const int dx[] = {1, 0, -1, 0}, dy[] = {0, 1, 0, -1};
 
+int n, m[20], dp[20][1<<13 + 1];
+
+int dfs(int idx, int rem){
+	int &res = dp[idx][rem];
+	if(res != -1) return res;
+	if(rem == 1) return res = 0;
+ 
+	FOR(i, 1, m[idx]+1) {
+		if(rem - i < 1)
+			break;
+		if(!dfs((idx + 1) % n, rem - i))
+			return res = 1;
+	}
+	return res = 0;
+}
+ 
 int main() {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 
-	int n;
 	while(cin >> n, n) {
+		n += n;
 		int s; cin >> s;
-		int a = 0, b = 0;
-		bool flg = false;
-		REP(i, n) {
-			int a2, b2; cin >> a2 >> b2;
-			a += a2, b += b2;
+		REP(i, n)
+			cin >> m[i];
+		memset(dp, -1, sizeof(dp));
+		cout << dfs(0, s) << endl;
+		/*
+		REP(i, n*2) {
+			REP(j, s)
+				cout << dp[i][j] << ' ';
+			cout << endl;
 		}
-		FOR(i, a+n, b+n+1)
-			if(1 == s % i)
-				flg = true;
-		if(flg)
-			cout << 0 << endl;
-		else
-			cout << 1 << endl;
+		*/
 	}
 	return 0;
 }

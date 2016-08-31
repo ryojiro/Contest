@@ -1,22 +1,23 @@
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <string>
 #include <vector>
-#include <deque>
 #include <list>
-#include <algorithm>
-#include <numeric>
-#include <functional>
-#include <cmath>
-#include <cstring>
-#include <cctype>
-#include <sstream>
-#include <set>
 #include <map>
-#include <stack>
+#include <set>
 #include <queue>
-#include <complex>
+#include <deque>
+#include <stack>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
 using namespace std;
 #define REP(i,n) for(int i = 0; i < (int)n; i++)
 #define FOR(i,a,b) for(int i = a; i < (int)b; i++)
@@ -29,16 +30,31 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 const int dx[] = {1, 0, -1, 0}, dy[] = {0, 1, 0, -1};
 
-struct s {
-	string name, com;
-	int type, price;
-};
-struct c {
-	int l, h, sum, cnt;
-	c() {
-		l = INF, h = 0, sum = 0, cnt = 0;
+struct order {
+	string name;
+	char com;
+	int price;
+	bool operator < (const order &a) const {
+		return price < a.price;
 	}
 };
+
+struct comodity {
+	int min, max, sum, cnt;
+	comodity() {}
+	comodity(int a, int b, int c, int d) : min(a), max(b), sum(c), cnt(d) {}
+};
+
+void addCom(map<char, comodity> &m, int v, char name) {
+	if(!m.count(name))
+		m[name] = comodity(v, v, v, 1);
+	else {
+		m[name].min = min(m[name].min, v);
+		m[name].max = max(m[name].max, v);
+		m[name].sum += v;
+		m[name].cnt++;
+	}
+}
 
 int main() {
 	ios_base::sync_with_stdio(0);
@@ -46,71 +62,63 @@ int main() {
 
 	int n;
 	while(cin >> n, n) {
-		vector<s> r(n);
+		vector<order> buy, sell;
 		map<string, pi> ppl;
-		map<string, c> co;
+		map<char, comodity> m;
 		REP(i, n) {
-			cin >> r[i].name;
-			string tmp; cin >> tmp;
-			if(tmp == "BUY")
-				r[i].com = 1;
-			else if(tmp == "SELL")
-				r[i].com = 2;
-			cin >> r[i].type >> r[i].price;
-			if(!ppl.count(r[i].name))
-				ppl[r[i].name] = mp(0, 0);
-			if(!co.count(r[i].com))
-				co[r[i].com] = c();
-		}
-		REP(i, n) {
-			int p = -1, pri;
-			if(r[i].type == 1)
-				pri = 0;
-			else if (r[i].type == 2)
-				pri = INF;
-			FOR(j, i+1, n) {
-				if(r[i].com == r[j].com && r[i].name != r[j].name) {
-					if(r[i].type == 1) {
-						if(r[j].type == 2 && r[i].price >= r[j].price && r[j].price > p) {
-							p = j;
-							pri = r[j].price;
-						}
-					}
-					else if(r[i].type == 2) {
-						if(r[j].type == 1 && r[i].price <= r[j].price && r[j].price < p) {
-							p = j;
-							pri = r[j].price;
-						}
+			order o; string in;
+			cin >> o.name >> in >> o.com >> o.price;
+			if(!ppl.count(o.name))
+				ppl[o.name] = mp(0,0);
+
+			bool flg = false;
+			int v, pnt;
+			if(in == "SELL") {
+				REP(j, buy.size()) {
+					if(o.com == buy[j].com && o.name != buy[j].name && o.price <= buy[j].price) {
+						v = (o.price + buy[j].price) / 2;
+						addCom(m, v, o.com);
+						flg = true;
+						pnt = j;
+						break;
 					}
 				}
+				if(flg) {
+					ppl[buy[pnt].name].first += v;
+					ppl[o.name].second += v;
+					buy.erase(buy.begin() + pnt);
+				}
+				else {
+					sell.pb(o);
+					stable_sort(sell.begin(), sell.end());
+				}
 			}
-			cout << "debug " << endl;
-
-			int p2 = r[i].price + r[p].price /2;
-			if(p == -1)
-				r[i].type = 0;
-			else if(r[i].type == 1) {
-				ppl[r[i].name].first += p2;
-				ppl[r[p].name].second += p2;
-				r[i].type = r[p].type = 0;
+			else if(in == "BUY") {
+				REP(j, sell.size()) {
+					if(o.com == sell[j].com && o.name != sell[j].name && o.price >= sell[j].price) {
+						v = (o.price + sell[j].price) / 2;
+						addCom(m, v, o.com);
+						flg = true;
+						pnt = j;
+						break;
+					}
+				}
+				if(flg) {
+					ppl[o.name].first += v;
+					ppl[sell[pnt].name].second += v;
+					sell.erase(sell.begin() + pnt);
+				}
+				else {
+					buy.pb(o);
+					stable_sort(buy.rbegin(), buy.rend());
+				}
 			}
-			else if(r[i].type == 2) {
-				ppl[r[i].name].second += p2;
-				ppl[r[p].name].first += p2;
-				r[i].type = r[p].type = 0;
-			}
-			if(co[r[i].com].l > p2)
-				co[r[i].com].l = p2;
-			if(co[r[i].com].h < p2)
-				co[r[i].com].h = p2;
-			co[r[i].com].sum += p2;
-			co[r[i].com].cnt++;
 		}
-		for(auto it = co.begin(); it != co.end(); it++)
-			cout << it->first << ' ' << it->second.l << ' ' <<  it->second.sum/ it->second.cnt << ' ' << it->second.h;
+		for(auto i : m)
+			cout << i.first << ' ' << i.second.min << ' ' << i.second.sum / i.second.cnt << ' ' << i.second.max << endl;
 		cout << "--" << endl;
-		for(auto it = ppl.begin(); it != ppl.end(); it++)
-			cout << it->first << ' ' << it->second.first << ' ' << it->second.second;
+		for(auto i : ppl)
+			cout << i.first << ' ' << i.second.first << ' ' << i.second.second << endl;
 		cout << "----------" << endl;
 	}
 	return 0;

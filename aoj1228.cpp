@@ -35,19 +35,26 @@ int main() {
 	cin.tie(0);
 
 	int n; cin >> n;
-	cin.ignore();
 	REP(_, n) {
-		string in1, in2;
-		getline(cin, in1);
-		getline(cin, in2);
-		string in; getline(cin, in);
+		string in1, in2, in;
+		cin >> in1;
+		if(in1 == "-") {
+			cout << "true" << endl;
+			continue;
+		}
+		cin >> in2;
+		if(in2 == "-") {
+			cout << "false" << endl;
+			continue;
+		}
+		cin >> in;
 		if(in1.size() != in2.size()) {
 			cout << "false" << endl;
 			continue;
 		}
 
-		bool b[200][200] = {};
-		pi p = mp(100, 100);
+		bool b[250][250] = {};
+		pi p(120, 120);
 		REP(i, in1.size()) {
 			p.first += dx[in1[i] - 'a'];
 			p.second += dy[in1[i] - 'a'];
@@ -56,18 +63,20 @@ int main() {
 
 		bool flg = false;
 		REP(j, 6) {
-			p = mp(100, 100);
+			p = mp(120, 120);
 			int cnt = 0;
 			REP(i, in2.size()) {
 				p.first += dx[(in2[i] - 'a' + j) % 6];
 				p.second += dy[(in2[i] - 'a' + j) % 6];
 				if(b[p.first][p.second])
 					cnt++;
-				if(cnt == in2.size())
-					flg = true;
+			}
+			if(cnt == in2.size()) {
+				flg = true;
+				break;
 			}
 		}
-		if(flg || !in1.size())
+		if(flg)
 			cout << "true" << endl;
 		else
 			cout << "false" << endl;

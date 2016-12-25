@@ -28,7 +28,7 @@ typedef pair<int, int> pi;
 typedef long long ll;
 const int INF = 1<<28;
 const ll MOD = 1000000007;
-const int dx[] = {1, 1, 0, -1, -1, 0}, dy[] = {0, 1, 1, 0, -1, -1};
+const int dy[] = {1, 1, 0, -1, -1, 0}, dx[] = {0, 1, 1, 0, -1, -1};
 
 int main() {
 	ios_base::sync_with_stdio(0);
@@ -59,6 +59,7 @@ int main() {
 			p.first += dx[in1[i] - 'a'];
 			p.second += dy[in1[i] - 'a'];
 			b[p.first][p.second] = true;
+			cout << p.first << ' ' << p.second << ' ';
 		}
 
 		bool flg = false;

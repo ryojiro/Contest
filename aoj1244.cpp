@@ -30,70 +30,66 @@ const int INF = 1<<28;
 const ll MOD = 1000000007;
 const int dx[] = {1, 0, -1, 0}, dy[] = {0, 1, 0, -1};
 
+int idx;
 string s;
 map<string, int> m;
 
-int dfs(int &pnt) {
-	int sum = 0;
-	cout << "pnt " << pnt << endl;
-	if(pnt == s.size())
-		return 0;
-	if(s[pnt] == '(') {
-		cout << 'e' << endl;
-		sum += dfs(++pnt);
+int number() {
+	int n = 0;
+	while(isdigit(s[idx])) {
+		if(n) n *= 10;
+		n += s[idx++] - '0';
 	}
-	if(pnt < s.size()-1 && m.count(s.substr(pnt, 2))) {
-		cout << 'a' << endl;
-		sum += m[s.substr(pnt, 2)];
-		pnt += 2;
-	}
-	else if(pnt < s.size() && m.count(s.substr(pnt, 1))) {
-		cout << 'b' << endl;
-		sum += m[s.substr(pnt, 1)];
-		pnt++;
-	}
-	else if(pnt < s.size() && s[pnt] == ')') {
-		cout << 'c' << endl;
-		pnt++;
-	}
-	if(pnt < s.size() && isdigit(s[pnt])) {
-		cout << 'd' << endl;
-		int time = 0;
-		bool last  = false;
-		while(pnt < s.size() && isdigit(s[pnt])) {
-			time = time * 10 + s[pnt] - '0';
-			pnt++;
-		}
-		cout << pnt << endl;
-		return sum * time;
-	}
-	return sum += dfs(++pnt);
+	return n;
 }
 
+int atom() {
+	string s2;
+	s2 += s[idx++];
+	if(islower(s[idx]))
+		s2 += s[idx++];
+	return m.count(s2) ? m[s2] : -1;
+}
+
+int molecute() {
+	int sum = 0;
+	while(idx < s.size() && s[idx] != ')') {
+		if(s[idx] == '(') {
+			idx++;
+			int sum2 = molecute();
+			if(sum2 == -1)
+				return -1;
+			idx++;
+			sum += sum2 * number();
+		}
+		else {
+			int sum2 = atom();
+			if(sum2 == -1)
+				return -1;
+			if(isdigit(s[idx]))
+				sum += sum2 * number();
+			else
+				sum += sum2;
+		}
+	}
+	return sum;
+}
 
 int main() {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 
-	bool flg = false;
-	while(cin >> s) {
-		if(s == "END_OF_FIRST_PART") {
-			flg = true;
-			continue;
-		}
-		if(!flg) {
-			int num; cin >> num;
-			m[s] = num;
-		}
-		if(flg) {
-			int pnt = 0, ans = 0;
-			while(pnt < s.size())
-				ans += dfs(pnt);
-			if(ans > 0)
-				cout << ans << endl;
-			else
-				cout << "UNKNOWN" << endl;
-		}
+	while(cin >> s, s != "END_OF_FIRST_PART") {
+		int num; cin >> num;
+		m[s] = num;
+	}
+	while(cin >> s, s != "0") {
+		idx = 0;
+		int ans = molecute();
+		if(ans == -1)
+			cout << "UNKNOWN" << endl;
+		else
+			cout << ans << endl;
 	}
 	return 0;
 }
